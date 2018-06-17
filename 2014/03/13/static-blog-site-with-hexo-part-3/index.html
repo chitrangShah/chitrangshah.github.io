@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="This post describes how to automate Hexo blog deployment to Amazon S3 using Grunt.js and grunt plugins.">
+<meta name="keywords" content="nodejs,hexo-setup,static-blog-setup,amazon-s3,gruntjs,automated-deployment">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt">
+<meta property="og:url" content="https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/index.html">
+<meta property="og:site_name" content="Chitrang Shah">
+<meta property="og:description" content="This post describes how to automate Hexo blog deployment to Amazon S3 using Grunt.js and grunt plugins.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_shell_task.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_shell_task_bash.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_sitemap.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_robots_txt.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_local_build.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_local.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_s3_config.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_s3_credentials.png">
+<meta property="og:image" content="https://chitrangshah.github.io/images/grunt_deploy.png">
+<meta property="og:updated_time" content="2018-06-17T22:17:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt">
+<meta name="twitter:description" content="This post describes how to automate Hexo blog deployment to Amazon S3 using Grunt.js and grunt plugins.">
+<meta name="twitter:image" content="https://chitrangshah.github.io/images/grunt_shell_task.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/chitrangShah">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2015/11/10/resolving-glass-configuration-maps-in-glass-mapper-v4-castle-windsor/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2014/03/10/static-blog-site-with-hexo-part-2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&text=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&is_video=false&description=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt&body=Check out this article: https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&name=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt&description=&lt;p&gt;&lt;em&gt;This is Part-3 and the last post in the series on “&lt;em&gt;Static Blog Setup with Hexo, Amazon S3 and Grunt&lt;/em&gt;“. You can view all the posts in this series here, &lt;a href=&#34;/tags/static-blog-setup/&#34;&gt;Static Blog Setup with Hexo, Amazon S3 and Grunt&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In the last &lt;a href=&#34;/2014/03/10/static-blog-site-with-hexo-part-2/&#34;&gt;post&lt;/a&gt;, we setup hosting for the blog and configured DNS entries for our custom domain. In this final post of this series, we will automate the deployment to S3 using Grunt.js. &lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-Grunt"><span class="toc-number">1.</span> <span class="toc-text">What is Grunt?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Let’s-Grunt"><span class="toc-number">2.</span> <span class="toc-text">Let’s Grunt!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Happy-Blogging"><span class="toc-number">3.</span> <span class="toc-text">_Happy Blogging!!! _ :)</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Chitrang Shah</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2014-03-13T20:00:00.000Z" itemprop="datePublished">2014-03-13</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/amazon-s3/">amazon-s3</a>, <a class="tag-link" href="/tags/automated-deployment/">automated-deployment</a>, <a class="tag-link" href="/tags/gruntjs/">gruntjs</a>, <a class="tag-link" href="/tags/hexo-setup/">hexo-setup</a>, <a class="tag-link" href="/tags/nodejs/">nodejs</a>, <a class="tag-link" href="/tags/static-blog-setup/">static-blog-setup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><em>This is Part-3 and the last post in the series on “<em>Static Blog Setup with Hexo, Amazon S3 and Grunt</em>“. You can view all the posts in this series here, <a href="/tags/static-blog-setup/">Static Blog Setup with Hexo, Amazon S3 and Grunt</a>.</em></p>
+<p>In the last <a href="/2014/03/10/static-blog-site-with-hexo-part-2/">post</a>, we setup hosting for the blog and configured DNS entries for our custom domain. In this final post of this series, we will automate the deployment to S3 using Grunt.js. </p>
+<a id="more"></a>
+<h3 id="What-is-Grunt"><a href="#What-is-Grunt" class="headerlink" title="What is Grunt?"></a>What is Grunt?</h3><p>Grunt is a JavaScript task runner, which let’s you automate repetitive tasks such as minification, compiling, deployment, etc. making your job easier. Also, the Grunt ecosystem is huge with hundreds of plugins to choose from which will automate just about anything with minimum effort. You can read more about Grunt in detail here, <a href="http://gruntjs.com/getting-started" target="_blank" rel="noopener">Getting started with Grunt.js</a>. </p>
+<p>For the Hexo blog, we will use a specific set of plugins to perform common hexo tasks of cleaning, generating the <em>public</em> folder and starting the local server to automating the deployment of the generated files to the staging and production buckets on S3.</p>
+<h3 id="Let’s-Grunt"><a href="#Let’s-Grunt" class="headerlink" title="Let’s Grunt!"></a>Let’s Grunt!</h3><p>Installing Grunt is very easy if you have already installed Node.js:</p>
+<pre><code>npm install -g grunt-cli
+</code></pre><p>This will install grunt globally on your machine. To install it on your local project directory, use:</p>
+<pre><code>npm install grunt --save-dev
+</code></pre><p>Each Grunt project has a Gruntfile.js project file and the packages.json file as you will see in the root folder of your project after you install Grunt. The Gruntfile.js is used to configure or define the tasks and load the plugins. The packages file sits in the root right next to the Gruntfile and is used to list grunt and the grunt plugins used by the project as “devDependencies”.</p>
+<p>Below are some of the tasks we want to accomplish for the blog to get started:</p>
+<ul>
+<li>Automate Hexo commands: ‘hexo clean’, ‘hexo generate’, ‘hexo server’</li>
+<li>Create sitemap.xml and robots.txt files for SEO</li>
+<li>Deploy to Amazon S3</li>
+</ul>
+<p><em><b>You can view my blog’s entire <a href="https://github.com/chitrangShah/chitrangshah.com/blob/master/blog/Gruntfile.js" target="_blank" rel="noopener">Gruntfile here</a>.</b></em></p>
+<p>Let’s get started with automating the Hexo commands so we can have our local environment up and running with one command.</p>
+<p>Download the <a href="https://www.npmjs.org/package/grunt-shell" target="_blank" rel="noopener">grunt shell plugin</a> in your project folder. I suggest reading the instructions on how it works to get a better understanding of the plugin.</p>
+<pre><code>npm install grunt-shell --save-dev
+</code></pre><p>Once installed, you will see that the dependency has been automatically updated in the packages.json file. Now, let’s configure Gruntfile.js to load this plugin for use as shown below.</p>
+<p><img src="/images/grunt_shell_task.png" alt="grunt_shell_task"></p>
+<p>As you can see, I am combining all the hexo commands into one shell command. Go to bash and type grunt:</p>
+<p><img src="/images/grunt_shell_task_bash.png" alt="grunt_shell_running"></p>
+<p>It will run all the commands listed for shell in the Gruntfile, cleaning the public folder, generating the files in public folder and finally, starting the Hexo local server. Go to <a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a> to see your blog.</p>
+<p>Awesome! We just automated our local environment to generate the files and start the server in one command. Let’s add some more plugins to lessen the burden of basic functionality such as updating sitemap every time you add new posts and creation of robots.txt.</p>
+<p>Download this <a href="https://www.npmjs.org/package/grunt-sitemap" target="_blank" rel="noopener">Grunt Sitemap plugin</a> and the <a href="https://www.npmjs.org/package/grunt-robots-txt" target="_blank" rel="noopener">Grunt robots.txt plugin</a>:</p>
+<pre><code>npm install grunt-sitemap --save-dev
+npm install grunt-robots-txt --save-dev
+</code></pre><p>You can configure them in the Gruntfile as shown below:</p>
+<p><img src="/images/grunt_sitemap.png" alt="grunt_sitemap"></p>
+<p><img src="/images/grunt_robots_txt.png" alt="grunt_robots_txt"></p>
+<p>Now, every time you generate the static files for Hexo, a sitemap.xml file and a robots.txt file will be automatically generated in the public folder based on the configuration in Gruntfile.js. I have combined all these plugins and loaded them in one task:</p>
+<p><img src="/images/grunt_local_build.png" alt="grunt_local_options"></p>
+<p>Typing grunt in bash will execute those commands, generating the files including sitemap and robots.txt and starting the local server:</p>
+<p><img src="/images/grunt_local.png" alt="grunt_local"></p>
+<p>Last, but not the least, let’s setup grunt to deploy all of these changes to their specific environments/buckets on Amazon S3. To do that, download this awesome <a href="https://www.npmjs.org/package/grunt-s3" target="_blank" rel="noopener">Grunt S3 plugin</a>.</p>
+<pre><code>npm install grunt-s3 --save-dev
+</code></pre><p>Once installed, you can configure it as shown below. Make sure that you have your AWS credentials. Also, add them in a separate JSON file and load them from that file to the Gruntfile for security reasons. You do not want your AWS credentials uploaded to your site or github by mistake!</p>
+<p><img src="/images/grunt_s3_config.png" alt="grunt_amazon_s3"></p>
+<p>As you can see, I am loading my credentials from an external file. I am calling the external file right at the start:</p>
+<p><img src="/images/grunt_s3_credentials.png" alt="grunt_s3_credentials"></p>
+<p>Combining all of the above tasks into single commands for each environment in the Gruntfile:</p>
+<p><img src="/images/grunt_deploy.png" alt="grunt_deploy"></p>
+<p>That’s it! If you type in “grunt staging or grunt production”, it will generate all the files in the public folder, connect to S3 with the credentials provided and push all the files there.</p>
+<p>This is the end of the series on <a href="/tags/static-blog-setup/">Static Blog Setup with Hexo, Amazon S3 and Grunt</a>. If you face any issues, do not hesitate to leave a comment or <a href="mailto:hello@chitrangshah.com?subject=Hello,%20let&#39;s%20talk" class="fancybox" target="_blank" rel="noopener">Contact Me</a>.</p>
+<h3 id="Happy-Blogging"><a href="#Happy-Blogging" class="headerlink" title="_Happy Blogging!!! _ :)"></a>_Happy Blogging!!! _ :)</h3>
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/chitrangShah">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-Grunt"><span class="toc-number">1.</span> <span class="toc-text">What is Grunt?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Let’s-Grunt"><span class="toc-number">2.</span> <span class="toc-text">Let’s Grunt!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Happy-Blogging"><span class="toc-number">3.</span> <span class="toc-text">_Happy Blogging!!! _ :)</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&text=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&is_video=false&description=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt&body=Check out this article: https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&title=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/&name=Static Blog Setup with Hexo, Amazon S3 and Grunt - Automating deployment with Grunt&description=&lt;p&gt;&lt;em&gt;This is Part-3 and the last post in the series on “&lt;em&gt;Static Blog Setup with Hexo, Amazon S3 and Grunt&lt;/em&gt;“. You can view all the posts in this series here, &lt;a href=&#34;/tags/static-blog-setup/&#34;&gt;Static Blog Setup with Hexo, Amazon S3 and Grunt&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In the last &lt;a href=&#34;/2014/03/10/static-blog-site-with-hexo-part-2/&#34;&gt;post&lt;/a&gt;, we setup hosting for the blog and configured DNS entries for our custom domain. In this final post of this series, we will automate the deployment to S3 using Grunt.js. &lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Chitrang Shah
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/chitrangShah">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-48362712-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'chitrangshah';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+

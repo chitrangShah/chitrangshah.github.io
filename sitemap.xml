@@ -2,9 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2018/05/16/hello-world/</loc>
+    <loc>https://chitrangshah.github.io/about/index.html</loc>
     
-    <lastmod>2018-05-16T21:28:04.000Z</lastmod>
+    <lastmod>2018-06-17T22:29:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://chitrangshah.github.io/2015/11/10/resolving-glass-configuration-maps-in-glass-mapper-v4-castle-windsor/</loc>
+    
+    <lastmod>2018-06-17T22:17:39.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://chitrangshah.github.io/2014/03/13/static-blog-site-with-hexo-part-3/</loc>
+    
+    <lastmod>2018-06-17T22:17:08.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://chitrangshah.github.io/2014/03/10/static-blog-site-with-hexo-part-2/</loc>
+    
+    <lastmod>2018-06-17T22:16:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://chitrangshah.github.io/2014/03/08/static-blog-site-with-hexo/</loc>
+    
+    <lastmod>2018-06-17T22:15:42.000Z</lastmod>
     
   </url>
   
